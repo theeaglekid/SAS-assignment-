@@ -1,0 +1,160 @@
+## [[[[[[[[[[ :::::::::::: 2022 FINAL ;;;;;;;;;;;;]]]]]]]]]]]]]]]]
+##------------Problem 02
+
+
+DATA SALARY;
+INPUT ID  AGE  GENDER $  RACE  $  ANN_SAL;
+DATALINES;
+1 18 F  W 23000
+2 18 F  B 29500
+3 19 F  W 35100
+4 20 M  W 26500
+5 21 M  B 20500
+;
+
+---------------------------(A)
+PROC PRINT DATA=SALARY;
+RUN;
+-------------------------(B)
+PROC MEANS MEAN DATA=WORK.SALARY;
+VAR AGE  ANN_SAL;
+RUN;
+-------------------------- (C)
+DATA SALARY;                                                                                                                            
+INPUT ID  AGE  GENDER $  RACE  $  ANN_SAL;                                                                                              
+IF (ANN_SAL>25000) THEN TAX=0.05*ANN_SAL;   
+ELSE IF ( ANN_SAL< =25000) THEN TAX=0;                                                                                          
+DATALINES;                                                                                                                              
+1 18 F  W 23000                                                                                                                         
+2 18 F  B 29500                                                                                                                         
+3 19 F  W 35100                                                                                                                         
+4 20 M  W 26500                                                                                                                         
+5 21 M  B 20500                                                                                                                         
+;                                                                                                                                       
+PROC PRINT DATA=SALARY;                                                                                                                 
+RUN;
+----------------------(D)
+PROC FORMAT;
+VALUE XX 1="LOW" 2="MIDDLE" 3="HIGH";
+RUN;
+DATA SALARY;
+INPUT ID  AGE  GENDER $  RACE  $  ANN_SAL;
+IF (ANN_SAL>25000) THEN TAX=0.05*ANN_SAL;   
+ELSE IF ( ANN_SAL< =25000) THEN TAX=0; 
+NETSAL=ANN_SAL-TAX;
+IF (NETSAL<=25000) THEN LABELS=1;
+ELSE IF (25000<NETSAL<=30000) THEN LABELS=2;
+ELSE IF (NETSAL>30000) THEN LABELS=3;
+FORMAT NETSAL XX;
+DATALINES;                                                                                                                              
+1 18 F  W 23000                                                                                                                         
+2 18 F  B 29500                                                                                                                         
+3 19 F  W 35100                                                                                                                         
+4 20 M  W 26500                                                                                                                         
+5 21 M  B 20500                                                                                                                         
+;  
+PROC PRINT DATA=SALARY;
+RUN;
+
+
+----------------------(E)
+PROC FREQ DATA=SALARY;
+TITLE "SALARY DATA";
+TABLES GENDER*NETSAL;
+RUN;
+##-------------------problem 03
+
+ # ------------------------------------SOLUTION (A)
+
+DATA D1;
+INFILE "C:\Users\Admin\Downloads\3rd year_senior_notes\3rd year_Batch-70\310\SAS\SAS-20230928T124123Z-001\SAS\MALE_STUDENTS.CSV" DLM="," FIRSTOBS=2;
+INPUT SUBJECT GENDER $ AGE HEIGHT;
+RUN;
+
+DATA D2;
+INFILE "C:\Users\Admin\Downloads\3rd year_senior_notes\3rd year_Batch-70\310\SAS\SAS-20230928T124123Z-001\SAS\FEMALE_STUDENTS.CSV" DLM="," FIRSTOBS=2 ;
+INPUT SUBJECT GENDER $ AGE HEIGHT;
+RUN;
+
+DATA D3;
+SET D1 D2;
+PROC PRINT DATA=D3;
+RUN;
+#-------------------------------------------------------------------- (B)
+
+PROC UNIVARIATE DATA=WORK.D3;
+HISTOGRAM HEIGHT/NORMAL;
+RUN;
+
+#-----------------------------------------(C)
+PROC CHART DATA=D3;
+VBAR HEIGHT/SUMBAR=HEIGHT TYPE=MEAN;
+RUN;
+
+[[[[[[[[[[[:::::::: 2021 FINAL :::::::]]]]]]]]]]]]]]
+
+
+
+
+
+
+
+#---------------------------- PROBLEM-02
+DATA D;
+INPUT AGE SBP;
+DATALINES;
+15 116
+20 120
+25 130
+30 132
+40 150
+50 148
+60 146
+70 156
+100 140
+;
+PROC CORR DATA=D;
+VAR AGE;
+WITH SBP;
+RUN;
+----------------------------------------------------------------------
+PROBLEM (03)
+
+DATA PLANT;
+INPUT  SAMPLE HEIGHT;
+DATALINES;
+1 13
+1 15 
+1 15
+1 16
+1 16
+1 16
+1 17
+1 18
+1 18
+1 19
+1 20
+1 21
+2 15
+2 15
+2 16
+2 18
+2 19
+2 19 
+2 19
+2 20
+2 21
+2 23
+2 23 
+2 24
+;
+PROC TTEST DATA=PLANT ALPHA=0.05 H0=0;   /* default SIDES=2*/
+CLASS SAMPLE;
+VAR HEIGHT;
+RUN;
+
+---------------------------------------------------
+
+
+
+
